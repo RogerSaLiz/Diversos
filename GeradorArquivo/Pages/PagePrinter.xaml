@@ -1,0 +1,72 @@
+﻿<Page x:Class="GeradorArquivo.Pages.PagePrinter"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:controls="clr-namespace:GeradorArquivo.Controls"
+      xmlns:controls1="http://metro.mahapps.com/winfx/xaml/controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="300" d:DesignWidth="300"
+	Title="PagePrinter" Name="Control">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+    <Grid>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="200"/>
+            </Grid.ColumnDefinitions>
+            <GroupBox Header="Pesquisa" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal">
+                    <Rectangle Height="20" Margin="5,0,0,0" Width="20" Fill="{DynamicResource AccentColorBrush}" VerticalAlignment="Center">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{StaticResource appbar_magnify_browse}" Stretch="Fill" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                    <TextBox Margin="5,0,0,0" Width="450" TextChanged="OnTextSearch" KeyDown="OnKeyRemoveEsc" Name="TbSearch"/>
+                </StackPanel>
+            </GroupBox>
+            <DataGrid Margin="0,5,0,0" AutoGenerateColumns="False" ItemsSource="{Binding CollectionPrinterModel, ElementName=Control}"  Grid.Row="1"
+                          SelectedItem="{Binding SelectdPrinterModel, ElementName=Control, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          CanUserAddRows="False" Name="Dg" BorderBrush="{DynamicResource AccentColorBrush}" BorderThickness="2">
+                <DataGrid.Columns>
+                    <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}" Width="30"
+                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"/>
+                    <DataGridTextColumn Header="Fabricante" Binding="{Binding Brand.BrandName}"/>
+                    <DataGridTextColumn Header="Impressora" Binding="{Binding ModelName}"  MinWidth="200"/>
+                    <DataGridTemplateColumn Header="Rede/Usb">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <controls1:ToggleSwitch OnLabel="Rede" OffLabel="USB" IsChecked="{Binding IsNetwork}" IsEnabled="False" />
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Propriedades">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox  IsChecked="{Binding IsCopier}" Content="IsCopier" IsEnabled="False"/>
+                                    <CheckBox  IsChecked="{Binding IsColor }" Content="IsColor" IsEnabled="False" Margin="5,0,0,0"/>
+                                    <CheckBox  IsChecked="{Binding IsDuplex}" Content="IsDuplex" IsEnabled="False" Margin="5,0,0,0"/>
+                                    <CheckBox  IsChecked="{Binding IsScan}" Content="IsScan" IsEnabled="False" Margin="5,0,0,0"/>
+                                    <CheckBox  IsChecked="{Binding IsLargeMedia}" Content="IsLargeMedia" IsEnabled="False" Margin="5,0,0,0"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <controls:Buttons Grid.Column="1" Margin="5" x:Name="ControlButtons" Grid.Row="1"></controls:Buttons>
+        </Grid>
+    </Grid>
+</Page>

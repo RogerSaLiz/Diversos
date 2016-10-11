@@ -1,0 +1,47 @@
+﻿<Controls:MetroWindow x:Class="GeradorArquivo.Windows.CWSetAvatar"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="Dados usuário" Width="700" WindowStartupLocation="CenterScreen"
+                       BorderBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1" x:Name="Control" >
+    <Grid>
+
+        <Controls:FlyoutsControl>
+            <Controls:Flyout x:Name="FlyoutAvatar" Header="Alterar Avatars" Position="Right" Width="200" AnimateOpacity="True">
+                <DataGrid AutoGenerateColumns="False" SelectionMode="Single" 
+                          CanUserAddRows="False" Name="DgAvatars" SelectedItem="{Binding SelectedAvatar, ElementName=Control, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Avatars" Width="*">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding AvatarImage}" Height="60" Width="60"></Image>
+                                        <Button Background="Transparent" BorderBrush="Transparent" Click="OnClickSalvarImagem">
+                                            <Button.Content>
+                                                <Hyperlink>
+                                                    Salvar
+                                                </Hyperlink>
+                                            </Button.Content>
+                                        </Button>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Controls:Flyout>
+        </Controls:FlyoutsControl>
+        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+            <Label Content="Avatar" HorizontalAlignment="Center"></Label>
+            <Image Height="100" Width="100" Margin="0,5,0,0" Name="Avatar" Source="/GeradorArquivo;component/Images/data2.png"></Image>
+            <Label Content="Usuário" HorizontalAlignment="Center" Margin="0,5,0,0"></Label>
+            <TextBox Margin="0,5,0,0" Width="200" Name="TbUser"></TextBox>
+            <Button Content="Alterar Avatar" Margin="0,10,0,0" Click="OnClickChangeAvatar"></Button>
+            <Button Content="Salvar" Margin="0,10,0,0" Click="OnClickSalvar"></Button>
+
+        </StackPanel>
+
+
+    </Grid>
+</Controls:MetroWindow>

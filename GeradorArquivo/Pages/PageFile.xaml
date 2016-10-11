@@ -1,0 +1,258 @@
+﻿<Page x:Class="GeradorArquivo.Pages.PageFile"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+      mc:Ignorable="d" 
+      d:DesignHeight="500" d:DesignWidth="800"
+	Title="PageFile" Name="Control">
+    <Page.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Page.Resources>
+
+    <Grid>
+        <TabControl>
+            <TabItem Header="Geral" Name="TbWizzard1">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <GroupBox Header="Configurações Iníciais">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel  Margin="20">
+                                <TextBlock Text="Empresa:"/>
+                                <ComboBox Margin="0,5,0,0" SelectedItem="{Binding SelectedEnterprise, ElementName=Control, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding CollectionEnterprises, ElementName=Control}" DisplayMemberPath="EnterpriseName"></ComboBox>
+                                <TextBlock Text="Data Inícial:" Margin="0,5,0,0"/>
+                                <controls:DateTimePicker Margin="0,5,0,0" Culture="pt-BR" SelectedDate="{Binding DateStart,ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" 
+                                                     />
+                                <TextBlock Text="Data Final:" Margin="0,5,0,0"/>
+                                <controls:DateTimePicker Margin="0,5,0,0" Culture="pt-BR" SelectedDate="{Binding DateEnd,ElementName=Control, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                <TextBlock Text="Volume de páginas por leitura:" Margin="0,5,0,0"/>
+                                <controls:NumericUpDown Minimum="1" Value="{Binding IntervalCounters, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,0"/>
+                                <TextBlock Text="Produto:" Margin="0,5,0,0"/>
+                                <ComboBox Margin="0,5,0,0" SelectedItem="{Binding SelectedProduct, ElementName=Control, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding CollectionProducts, ElementName=Control}" DisplayMemberPath="ProductName"></ComboBox>
+                                <TextBlock Text="Versão:" Margin="0,5,0,0"/>
+                                <TextBox Margin="0,5,0,0" Text="5.0.0.0" Name="TbVersionProduct"></TextBox>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1" Margin="20">
+                                <TextBlock Text="Sistema Operacional:"/>
+                                <ComboBox Margin="0,5,0,0" SelectedItem="{Binding SelectedOperationSystem, ElementName=Control, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                      ItemsSource="{Binding CollectionOperationSystem, ElementName=Control}" DisplayMemberPath="OperationSystemName"></ComboBox>
+                                <TextBlock Text="Nome do computador:" Margin="0,5,0,0"/>
+                                <TextBox Margin="0,5,0,0" Text="NDD-DESK-DEV000" Name="TbNameComputer"/>
+                                <TextBlock Text="Endereço IP:" Margin="0,5,0,0"/>
+                                <TextBox Margin="0,5,0,0" Text="172.31.251.58" Name="TbIP"/>
+                                <TextBlock Text="Máscara de Sub-rede:" Margin="0,5,0,0"/>
+                                <TextBox Margin="0,5,0,0" Text="255.255.0.0" Name="TbMac"/>
+                                <TextBlock Text="Fuso Horário" Margin="0,5,0,0"/>
+                                <TextBox Margin="0,5,0,0" Text="0"/>
+                            </StackPanel>
+                        </Grid>
+                    </GroupBox>
+                    <Rectangle Fill="{DynamicResource AccentColorBrush}" Margin="0,5,0,0" Opacity="0.8"  Grid.Row="1"  />
+                    <ToggleButton Width="50" Height="50" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleToggleButtonStyle}" Grid.Row="1"
+                                  Click="OnClickNextWizzard1" VerticalAlignment="Center" Margin="0,5,0,0">
+                        <Rectangle Width="20" Height="20" 
+                                 Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_fastforward_variant}"/>
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </ToggleButton>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Impressoras" Name="TbWizzard2" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="100"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <GroupBox Header="Pesquisa" HorizontalAlignment="Left">
+                            <StackPanel Orientation="Horizontal">
+                                <Rectangle Height="20" Margin="5,0,0,0" Width="20" Fill="{DynamicResource AccentColorBrush}" VerticalAlignment="Center">
+                                    <Rectangle.OpacityMask>
+                                        <VisualBrush Visual="{StaticResource appbar_magnify_browse}" Stretch="Fill" />
+                                    </Rectangle.OpacityMask>
+                                </Rectangle>
+                                <TextBox Margin="5,0,0,0" Width="450" TextChanged="OnTextSearch" KeyDown="OnKeyRemoveEsc" Name="TbSearch"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <DataGrid Margin="0,5,0,0" AutoGenerateColumns="False" ItemsSource="{Binding CollectionPrinterModel, ElementName=Control}"  
+                          CanUserAddRows="False" Name="Dg" Grid.Row="1" >
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}" Width="30"
+                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"/>
+                                <DataGridTextColumn Header="Fabricante" Binding="{Binding Brand.BrandName}" IsReadOnly="True" />
+                                <DataGridTextColumn Header="Impressora" Binding="{Binding ModelName}" IsReadOnly="True" />
+                                <controls:DataGridNumericUpDownColumn Header="Quantidade"
+                                                      Binding="{Binding QtPrinters}"
+                                                      Minimum="1" />
+                                <DataGridTemplateColumn Header="Rede/Usb">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:ToggleSwitch OnLabel="Rede" OffLabel="USB" IsChecked="{Binding IsNetwork, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   />
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Propriedades">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <CheckBox  IsChecked="{Binding IsCopier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsCopier"/>
+                                                <CheckBox  IsChecked="{Binding IsColor, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsColor" Margin="5,0,0,0"/>
+                                                <CheckBox  IsChecked="{Binding IsDuplex, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsDuplex" Margin="5,0,0,0"/>
+                                                <CheckBox  IsChecked="{Binding IsScan, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsScan" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                        <Grid Grid.Column="1" Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="4"/>
+                                <ColumnDefinition />
+                                <ColumnDefinition Width="4"/>
+                            </Grid.ColumnDefinitions>
+                            <Rectangle Fill="{DynamicResource AccentColorBrush}" Margin="2,0,0,0" Opacity="0.8"   />
+                            <Rectangle Fill="{DynamicResource AccentColorBrush}" Margin="0,0,2,0" Opacity="0.8"  Grid.Column="2" />
+                            <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <ToggleButton Width="50" Height="50" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleToggleButtonStyle}" Grid.Row="1"
+                                  Click="OnClickAddPrinter">
+                                    <Rectangle Width="20" Height="20" 
+                                 Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_arrow_right}"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </ToggleButton>
+
+                                <ToggleButton Width="50" Height="50" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleToggleButtonStyle}" Grid.Row="1"
+                                  Click="OnClickRemovePrinter">
+                                    <Rectangle Width="20" Height="20" 
+                                 Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_arrow_left}"/>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </ToggleButton>
+                            </StackPanel>
+                        </Grid>
+                        <DataGrid Margin="0,5,0,0" AutoGenerateColumns="False" ItemsSource="{Binding CollectionPrinterModelSelecteds, ElementName=Control}"  
+                          CanUserAddRows="False" Name="DgPrintersSelecteds" Grid.Column="2" Grid.Row="1" IsReadOnly="True">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}" Width="30"
+                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"/>
+                                <DataGridTextColumn Header="Fabricante" Binding="{Binding Brand.BrandName}"/>
+                                <DataGridTextColumn Header="Impressora" Binding="{Binding ModelName}"/>
+                                <DataGridTemplateColumn Header="Quantidade">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding QtPrinters}" HorizontalAlignment="Center"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Rede/Usb">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <controls:ToggleSwitch OnLabel="Rede" OffLabel="USB" IsChecked="{Binding IsNetwork}" IsEnabled="False"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="Propriedades">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal">
+                                                <CheckBox IsEnabled="False" IsChecked="{Binding IsCopier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsCopier"/>
+                                                <CheckBox IsEnabled="False" IsChecked="{Binding IsColor, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsColor" Margin="5,0,0,0"/>
+                                                <CheckBox IsEnabled="False" IsChecked="{Binding IsDuplex, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsDuplex" Margin="5,0,0,0"/>
+                                                <CheckBox IsEnabled="False" IsChecked="{Binding IsScan, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsScan" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                    <Rectangle Fill="{DynamicResource AccentColorBrush}" Margin="0,5,0,0" Opacity="0.8"  Grid.Row="1"  />
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,5,0,0">
+                        <ToggleButton Width="50" Height="50" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleToggleButtonStyle}" 
+                                      Click="OnClickBeforeWizzard2">
+                            <Rectangle Width="20" Height="20" 
+                                 Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_rewind_variant}"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </ToggleButton>
+
+                        <ToggleButton Width="50" Height="50" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleToggleButtonStyle}"
+                                      Click="OnClickNextWizzard2">
+                            <Rectangle Width="20" Height="20" 
+                                 Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_fastforward_variant}"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Outra" Name="TbWizzard3" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="Pagina 2" FontSize="30"></TextBlock>
+                    <Rectangle Fill="{DynamicResource AccentColorBrush}" Margin="0,5,0,0" Opacity="0.8"  Grid.Row="1"  />
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,5,0,0">
+                        <ToggleButton Width="50" Height="50" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleToggleButtonStyle}" 
+                                      Click="OnClickBeforeWizzard3">
+                            <Rectangle Width="20" Height="20" 
+                                 Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_rewind_variant}"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </ToggleButton>
+
+                        <ToggleButton Width="50" Height="50" HorizontalAlignment="Right" Style="{DynamicResource MetroCircleToggleButtonStyle}" 
+                                      Click="OnClickNextWizzard3">
+                            <Rectangle Width="20" Height="20" 
+                                 Fill="{Binding Path=Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{DynamicResource appbar_control_fastforward_variant}"/>
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </ToggleButton>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Page>

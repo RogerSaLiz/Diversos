@@ -1,0 +1,49 @@
+﻿<controls:MetroWindow x:Class="GeradorArquivo.Windows.CWSearchPrinter"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="Selecionar Impressora" Height="550" Width="600" WindowStartupLocation="CenterScreen"
+                       BorderBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1" x:Name="Control">
+    <controls:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="/Resources/Icons.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </controls:MetroWindow.Resources>
+    <Grid Margin="10,10,10,0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <GroupBox Header="Pesquisa" HorizontalAlignment="Left">
+            <StackPanel Orientation="Horizontal">
+                <Rectangle Height="20" Margin="5,0,0,0" Width="20" Fill="{DynamicResource AccentColorBrush}" VerticalAlignment="Center">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Visual="{StaticResource appbar_magnify_browse}" Stretch="Fill" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+                <TextBox Margin="5,0,0,0" Width="450" TextChanged="OnTextSearch" KeyDown="OnKeyRemoveEsc" Name="TbSearch"/>
+            </StackPanel>
+        </GroupBox>
+        <DataGrid Margin="0,5,0,0" AutoGenerateColumns="False" ItemsSource="{Binding CollectionPrinterModel, ElementName=Control}"  Grid.Row="1"
+                          SelectedItem="{Binding SelectdPrinterModel, ElementName=Control, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          CanUserAddRows="False" Name="Dg" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}" Width="30"
+                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"/>
+                <DataGridTextColumn Header="Fabricante" Binding="{Binding Brand.BrandName}"/>
+                <DataGridTextColumn Header="Impressora" Binding="{Binding ModelName}"/>
+                <DataGridTextColumn Header="Nome MPS" Binding="{Binding NameXML}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Rectangle Fill="{DynamicResource AccentColorBrush}" Grid.Row="2" Opacity="0.8"  Height="2" VerticalAlignment="Top"></Rectangle>
+        <StackPanel Orientation="Horizontal" Margin="0,10,0,10" HorizontalAlignment="Right" Grid.Row="2">
+            <Button Content="Adicionar" Height="30" Width="100" Margin="0,0,5,0" Click="OnClickAdd"/>
+            <Button Content="Cancelar" Height="30" Width="100" Click="OnClickCancel"/>
+        </StackPanel>
+    </Grid>
+</controls:MetroWindow>

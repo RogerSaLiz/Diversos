@@ -1,0 +1,23 @@
+﻿<windows:NDDWindown x:Class="GeradorArquivo.Windows.CWBrand"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:windows="clr-namespace:GeradorArquivo.Windows"
+        Title="Frabricante" Height="145" Width="600" WindowStartupLocation="CenterScreen"
+                       BorderBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1" x:Name="Control">
+    <controls:MetroWindow.WindowButtonCommands>
+        <controls:WindowButtonCommands Style="{DynamicResource MahApps.Metro.Styles.WindowButtonCommands.Win10}" />
+    </controls:MetroWindow.WindowButtonCommands>
+    <Grid Margin="10,10,10,0">
+        <StackPanel Height="auto">
+            <TextBlock Text="Nome:"/>
+            <TextBox MaxLength="255" Margin="0,5,0,0" Text="{Binding OBBrand.BrandName, ElementName=Control, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Name="TbName"/>
+            <Rectangle Fill="{DynamicResource AccentColorBrush}" Margin="0,5,0,0" Opacity="0.8"  Height="2" VerticalAlignment="Top" />
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,0" HorizontalAlignment="Right">
+                <Button Content="Salvar" Height="30" Width="100" Margin="0,0,5,0" Click="OnClickSalvar"/>
+                <Button Content="Fechar" Height="30" Width="100" Click="OnClickClosed"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</windows:NDDWindown>

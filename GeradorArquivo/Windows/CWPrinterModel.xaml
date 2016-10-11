@@ -1,0 +1,124 @@
+﻿<windows:NDDWindown x:Class="GeradorArquivo.Windows.CWPrinterModel"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:windows="clr-namespace:GeradorArquivo.Windows"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="Impressora" WindowStartupLocation="CenterScreen"
+                       BorderBrush="{DynamicResource AccentColorBrush}"
+                      BorderThickness="1" x:Name="Control" Height="540" Width="800">
+    <Grid Margin="10,10,10,0">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TabControl>
+            <TabItem Header="Impressora">
+                <Grid>
+                    <StackPanel Margin="0,5,0,0">
+                        <TextBlock Text="Fabricantes:"/>
+                        <ComboBox Margin="0,5,0,0" ItemsSource="{Binding CollectionBrand, ElementName=Control}" SelectedItem="{Binding SelectdBrand, ElementName=Control, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                      DisplayMemberPath="BrandName"/>
+                        <TextBlock Text="Modelo:" Margin="0,5,0,0"/>
+                        <TextBox Margin="0,5,0,0" MaxLength="255" Text="{Binding OBPrinterModel.ModelName, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="TbModelName"/>
+                        <TextBlock Text="Nome MPS:" Margin="0,5,0,0"/>
+                        <TextBox Margin="0,5,0,0" MaxLength="255" Text="{Binding OBPrinterModel.NameXML, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="TbNameXML"/>
+                        <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
+                            <StackPanel>
+                                <TextBlock Text="Rede/USB:" Margin="0,5,0,0"/>
+                                <controls:ToggleSwitch OnLabel="Rede" OffLabel="USB" IsChecked="{Binding OBPrinterModel.IsNetwork, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   />
+                            </StackPanel>
+                            <StackPanel Margin="30,17,0,0" VerticalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox  IsChecked="{Binding OBPrinterModel.IsCopier, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ElementName=Control}" Content="IsCopier"/>
+                                    <CheckBox  IsChecked="{Binding OBPrinterModel.IsColor, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ElementName=Control}" Content="IsColor" Margin="5,0,0,0"/>
+                                    <CheckBox  IsChecked="{Binding OBPrinterModel.IsDuplex, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ElementName=Control}" Content="IsDuplex" Margin="5,0,0,0"/>
+                                    <CheckBox  IsChecked="{Binding OBPrinterModel.IsScan, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ElementName=Control}" Content="IsScan" Margin="5,0,0,0"/>
+                                    <CheckBox  IsChecked="{Binding OBPrinterModel.IsLargeMedia, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ElementName=Control}" Content="IsScan" Margin="5,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                        <TextBlock Text="Localização:" Margin="0,5,0,0"/>
+                        <TextBox Margin="0,5,0,0" Height="60" MaxLength="255" Text="{Binding OBPrinterModel.Location, ElementName=Control,Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                        <TextBlock Text="Observação:" Margin="0,5,0,0"/>
+                        <TextBox Margin="0,5,0,0" MaxLength="255" Text="{Binding OBPrinterModel.Observation, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="TbObservation"
+                                 Height="60"/>
+
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Suprimentos">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Margin="0,5,0,0" AutoGenerateColumns="False" ItemsSource="{Binding CollectionSupplyModel, ElementName=Control}"
+                          SelectedItem="{Binding SelectedSupplyModel, ElementName=Control, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          CanUserAddRows="False" SelectionMode="Single" IsReadOnly="True">
+                        <DataGrid.Columns>
+                            <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                        EditingElementStyle="{DynamicResource MetroDataGridCheckBox}" Width="30"
+                                        Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"/>
+                            <DataGridTemplateColumn Header="Comportamento">
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox ItemsSource="{Binding ListBehSupply}" DisplayMemberPath="Description" SelectedItem="{Binding BehSupply, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Fabricante" Binding="{Binding BrandName}"/>
+                            <DataGridTextColumn Header="Descrição" Binding="{Binding Description}"/>
+                            <DataGridTextColumn Header="PartNumber" Binding="{Binding PartNumber}"/>
+                            <DataGridTextColumn Header="Capacidade" Binding="{Binding Capacity}"/>
+                            <DataGridTextColumn Header="Cor" Binding="{Binding SupplyColorName}"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,10" HorizontalAlignment="Right" Grid.Row="1">
+                        <Button Content="Adicionar" Height="30" Width="100" Margin="0,0,5,0" Click="OnClickAdd"/>
+                        <Button Content="Remover" Height="30" Width="100" Click="OnClickRemover" IsEnabled="False" Name="BtnRemover"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Contadores">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <DataGrid Margin="0,5,0,0" AutoGenerateColumns="False" ItemsSource="{Binding CollectionCounterPrinter, ElementName=Control}" SelectionMode="Single"
+                          SelectedItem="{Binding SelectedCounterPrinter, ElementName=Control, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                          CanUserAddRows="False" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Id" Binding="{Binding CounterTypeID}" IsReadOnly="True"/>
+                            <DataGridTextColumn Header="Nome" Binding="{Binding CounterTypeName}" IsReadOnly="True"/>
+                            <controls:DataGridNumericUpDownColumn Header="Total %"
+                                                      Binding="{Binding Total}"
+                                                      Minimum="0" />
+                            <controls:DataGridNumericUpDownColumn Header="Color %"
+                                                      Binding="{Binding Color}"
+                                                      Minimum="0" />
+                            <controls:DataGridNumericUpDownColumn Header="Mono %"
+                                                      Binding="{Binding Mono}"
+                                                      Minimum="0" />
+
+
+
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <StackPanel Orientation="Horizontal" Margin="0,10,0,10" HorizontalAlignment="Right" Grid.Row="1">
+                        <Button Content="Adicionar" Height="30" Width="100" Margin="0,0,5,0" Click="OnClickAddCounter"/>
+                        <Button Content="Remover" Height="30" Width="100" Click="OnClickRemoverCounter" IsEnabled="False" Name="BtnRemoverCounter"/>
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Rectangle Fill="{DynamicResource AccentColorBrush}" Grid.Row="1" Opacity="0.8"  Height="2" VerticalAlignment="Top" />
+        <StackPanel Orientation="Horizontal" Margin="0,10,3,10" HorizontalAlignment="Right" Grid.Row="1">
+            <Button Content="Salvar" Height="30" Width="100" Margin="0,0,5,0" Click="OnClickSalvar"/>
+            <Button Content="Fechar" Height="30" Width="100" Click="OnClickClosed"/>
+        </StackPanel>
+
+    </Grid>
+</windows:NDDWindown>
