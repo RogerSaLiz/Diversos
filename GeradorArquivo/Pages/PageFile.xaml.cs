@@ -14,6 +14,7 @@ using GeradorArquivo.Annotations;
 using GeradorArquivo.Helper;
 using GeradorArquivo.Objects;
 using GeradorArquivo.ObjectsDB;
+using GeradorArquivo.Windows;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using GeradorArquivo.Helper;
@@ -128,7 +129,7 @@ namespace GeradorArquivo.Pages
             }
         }
 
-        private DateTime _dateEnd = DateTime.Now.AddDays(30);
+        private DateTime _dateEnd = DateTime.Now.AddDays(3);
         public DateTime DateEnd
         {
             get { return _dateEnd; }
@@ -139,7 +140,7 @@ namespace GeradorArquivo.Pages
             }
         }
 
-        private int _intervalCounters = 10;
+        private int _intervalCounters = 15;
         public int IntervalCounters
         {
             get { return _intervalCounters; }
@@ -147,6 +148,17 @@ namespace GeradorArquivo.Pages
             {
                 _intervalCounters = value;
                 OnPropertyChanged("IntervalCounters");
+            }
+        }
+
+        private int _intervalReaders = 12;
+        public int IntervalReaders
+        {
+            get { return _intervalReaders; }
+            set
+            {
+                _intervalReaders = value;
+                OnPropertyChanged("IntervalReaders");
             }
         }
 
@@ -158,7 +170,7 @@ namespace GeradorArquivo.Pages
         {
             InitializeComponent();
             RetrieveAll();
-           
+
         }
 
         #endregion
@@ -166,7 +178,7 @@ namespace GeradorArquivo.Pages
         private void IPAddress()
         {
             TbNameComputer.Text = Environment.MachineName;
-            TbIP.Text= Dns.GetHostByName(Environment.MachineName).AddressList[1].ToString();
+            TbIP.Text = Dns.GetHostByName(Environment.MachineName).AddressList[1].ToString();
 
         }
 
@@ -183,9 +195,9 @@ namespace GeradorArquivo.Pages
         {
             var db = new PrinterModelDB();
             CollectionPrinterModel.Clear();
-            CollectionPrinterModel.AddRange(db.BuscaTodos());
+            CollectionPrinterModel.AddRange(db.BuscaTodos(true));
         }
-        
+
         private void LoadAllProducts()
         {
             var db = new ProductDB();
@@ -248,17 +260,29 @@ namespace GeradorArquivo.Pages
                 AddPrinter(() => { });
         }
 
+        private List<PrinterSupplyModelCounter> _listCountersDeteils;
+        public List<PrinterSupplyModelCounter> ListCountersDeteils
+        {
+            get { return _listCountersDeteils ?? (_listCountersDeteils = new List<PrinterSupplyModelCounter>()); }
+            set
+            {
+                _listCountersDeteils = value;
+                OnPropertyChanged("ListCountersDeteils");
+            }
+        }
         private void AddPrinter(Action ok)
         {
-            var listIDs = new List<int>();
+            var listIDsPrinterRemove = new List<int>();
+            // ListCountersDeteils.Clear();
             foreach (PrinterModel item in Dg.SelectedItems)
             {
                 CollectionPrinterModelSelecteds.Add(item);
-                listIDs.Add(item.PrinteModelID);
+                CreateDetailsCountersPrinters(item);
+                listIDsPrinterRemove.Add(item.PrinteModelID);
             }
 
 
-            foreach (var item in listIDs)
+            foreach (var item in listIDsPrinterRemove)
             {
                 var printerModel = CollectionPrinterModel.FirstOrDefault(p => p.PrinteModelID == item);
                 if (printerModel != null)
@@ -267,6 +291,35 @@ namespace GeradorArquivo.Pages
             ok.Invoke();
         }
 
+
+        private void CreateDetailsCountersPrinters(PrinterModel model)
+        {
+
+            foreach (var counter in model.ListCounters)
+            {
+                var dataInitial = DateStart;
+                var counterInitial = Convert.ToDouble(model.CounterInitial);
+                while (dataInitial <= DateEnd)
+                {
+                    var detail = new PrinterSupplyModelCounter();
+                    detail.PrinteModelID = model.PrinteModelID;
+                    detail.DateIntervalReaders = dataInitial;
+                    detail.CounterTypeName = counter.CounterTypeName;
+                    detail.CounterTypeID = counter.CounterTypeID;
+                    detail.Total = Math.Ceiling((counterInitial * Convert.ToDouble((counter.Total / 100))));
+                    detail.Color = Math.Ceiling((counterInitial * Convert.ToDouble((counter.Total / 100))) * Convert.ToDouble((counter.Color / 100)));
+                    detail.Mono = Math.Floor((counterInitial * Convert.ToDouble((counter.Total / 100))) * (counter.Mono / 100));
+                    detail.SumMonoColor = detail.Color + detail.Mono;
+                    detail.TotalPerc = Convert.ToDouble((counter.Total / 100));
+                    detail.ColorPerc = Convert.ToDouble((counter.Color / 100));
+                    detail.MonoPerc = Convert.ToDouble((counter.Mono / 100));
+                    detail.DifTotalMonoColor = detail.Total - detail.SumMonoColor;
+                    dataInitial = dataInitial.AddHours(IntervalReaders);
+                    counterInitial = counterInitial + IntervalCounters;
+                    ListCountersDeteils.Add(detail);
+                }
+            }
+        }
         private void OnClickRemovePrinter(object sender, RoutedEventArgs e)
         {
             if (CollectionPrinterModelSelecteds.Count == 0 || DgPrintersSelecteds.SelectedItems.Count == 0)
@@ -277,18 +330,17 @@ namespace GeradorArquivo.Pages
 
         private void RemovePrinter(Action ok)
         {
-            var listIDs = new List<int>();
+            var printerModelIds = new List<int>();
             foreach (PrinterModel item in DgPrintersSelecteds.SelectedItems)
             {
                 CollectionPrinterModel.AddSorted(item, item.Index);
-                listIDs.Add(item.PrinteModelID);
+                printerModelIds.Add(item.PrinteModelID);
             }
 
-            foreach (var item in listIDs)
+            foreach (var item in printerModelIds)
             {
-                var printerModel = CollectionPrinterModelSelecteds.FirstOrDefault(p => p.PrinteModelID == item);
-                if (printerModel != null)
-                    CollectionPrinterModelSelecteds.Remove(printerModel);
+                CollectionPrinterModelSelecteds.Remove(p => p.PrinteModelID == item);
+                ListCountersDeteils.RemoveAll(p => p.PrinteModelID == item);
             }
             ok.Invoke();
         }
@@ -329,13 +381,13 @@ namespace GeradorArquivo.Pages
                 TbMac.Focus();
                 return;
             }
-            
+
             TbWizzard1.Visibility = Visibility.Collapsed;
             TbWizzard2.Visibility = Visibility.Visible;
             TbWizzard2.IsSelected = true;
         }
-        
-       
+
+
 
         private void OnClickBeforeWizzard2(object sender, RoutedEventArgs e)
         {
@@ -376,6 +428,30 @@ namespace GeradorArquivo.Pages
         {
             var handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void OnClickOpenCountersDetail(object sender, RoutedEventArgs e)
+        {
+            var printerModel = DgPrintersSelecteds.SelectedItem as PrinterModel;
+            var printerSupplyModelCounters = ListCountersDeteils.Where(p => p.PrinteModelID == printerModel.PrinteModelID);
+            var cw = new CWDetailCountersPrinters(printerSupplyModelCounters, IntervalCounters);
+            cw.Closed += delegate
+            {
+                if (cw.DialogResult.Value)
+                {
+                    foreach (var item in cw.ListCounters2)
+                    {
+                        var remove = ListCountersDeteils.First(p => p.PrinteModelID == item.PrinteModelID);
+                        ListCountersDeteils.Remove(remove);
+                    }
+
+                    foreach (var item in cw.ListCounters2)
+                        ListCountersDeteils.Add(item);
+
+                }
+            };
+            cw.ShowDialog();
+
         }
     }
 }

@@ -42,7 +42,8 @@ namespace GeradorArquivo.Pages
 
         public PageEnterprises()
         {
-            InitializeComponent(); ControlButtons.OnClickAdicionarEvent += OnClickAdicionarEvent;
+            InitializeComponent(); 
+            ControlButtons.OnClickAdicionarEvent += OnClickAdicionarEvent;
             ControlButtons.OnClickEditarEvent += OnClickEditarEvent;
             ControlButtons.OnClickExcluirEvent += OnClickExcluirEvent;
             ReadAll();

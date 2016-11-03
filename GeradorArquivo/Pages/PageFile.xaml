@@ -4,6 +4,7 @@
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+      xmlns:controls1="clr-namespace:GeradorArquivo.Controls"
       mc:Ignorable="d" 
       d:DesignHeight="500" d:DesignWidth="800"
 	Title="PageFile" Name="Control">
@@ -40,6 +41,8 @@
                                 <controls:DateTimePicker Margin="0,5,0,0" Culture="pt-BR" SelectedDate="{Binding DateEnd,ElementName=Control, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
                                 <TextBlock Text="Volume de páginas por leitura:" Margin="0,5,0,0"/>
                                 <controls:NumericUpDown Minimum="1" Value="{Binding IntervalCounters, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,0"/>
+                                <TextBlock Text="Intervalo entre as leituras horas:" Margin="0,5,0,0"/>
+                                <controls:NumericUpDown Minimum="1" Value="{Binding IntervalReaders, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Margin="0,5,0,0"/>
                                 <TextBlock Text="Produto:" Margin="0,5,0,0"/>
                                 <ComboBox Margin="0,5,0,0" SelectedItem="{Binding SelectedProduct, ElementName=Control, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                       ItemsSource="{Binding CollectionProducts, ElementName=Control}" DisplayMemberPath="ProductName"></ComboBox>
@@ -100,15 +103,20 @@
                             </StackPanel>
                         </GroupBox>
                         <DataGrid Margin="0,5,0,0" AutoGenerateColumns="False" ItemsSource="{Binding CollectionPrinterModel, ElementName=Control}"  
-                          CanUserAddRows="False" Name="Dg" Grid.Row="1" >
+                          CanUserAddRows="False" x:Name="Dg" Grid.Row="1" SelectionMode="Extended">
                             <DataGrid.Columns>
                                 <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}" Width="30"
                                         Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"/>
+                                
+                                <controls:DataGridNumericUpDownColumn Header="Contator Inícial"
+                                                      Binding="{Binding CounterInitial, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+                                                      Minimum="1" />
                                 <DataGridTextColumn Header="Fabricante" Binding="{Binding Brand.BrandName}" IsReadOnly="True" />
                                 <DataGridTextColumn Header="Impressora" Binding="{Binding ModelName}" IsReadOnly="True" />
+                                <DataGridTextColumn Header="S.Number" Binding="{Binding SerialNumber}" IsReadOnly="True" />
                                 <controls:DataGridNumericUpDownColumn Header="Quantidade"
-                                                      Binding="{Binding QtPrinters}"
+                                                      Binding="{Binding QtPrinters,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                                                       Minimum="1" />
                                 <DataGridTemplateColumn Header="Rede/Usb">
                                     <DataGridTemplateColumn.CellTemplate>
@@ -125,6 +133,20 @@
                                                 <CheckBox  IsChecked="{Binding IsColor, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsColor" Margin="5,0,0,0"/>
                                                 <CheckBox  IsChecked="{Binding IsDuplex, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsDuplex" Margin="5,0,0,0"/>
                                                 <CheckBox  IsChecked="{Binding IsScan, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsScan" Margin="5,0,0,0"/>
+                                                <CheckBox  IsChecked="{Binding IsLargeMedia, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsLargeMedia" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="AddressName/Port/Mac">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Text="{Binding AddressName}"/>
+                                                <TextBlock Text=" / "/>
+                                                <TextBlock Text="{Binding AddressPort}"/>
+                                                <TextBlock Text=" / "/>
+                                                <TextBlock Text="{Binding AddressMac}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -162,13 +184,29 @@
                             </StackPanel>
                         </Grid>
                         <DataGrid Margin="0,5,0,0" AutoGenerateColumns="False" ItemsSource="{Binding CollectionPrinterModelSelecteds, ElementName=Control}"  
-                          CanUserAddRows="False" Name="DgPrintersSelecteds" Grid.Column="2" Grid.Row="1" IsReadOnly="True">
+                          CanUserAddRows="False" Name="DgPrintersSelecteds" Grid.Column="2" Grid.Row="1" IsReadOnly="True" SelectionMode="Extended" SelectionUnit="FullRow">
                             <DataGrid.Columns>
-                                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}"
+                                <DataGridCheckBoxColumn ElementStyle="{DynamicResource MetroDataGridCheckBox}" 
                                         EditingElementStyle="{DynamicResource MetroDataGridCheckBox}" Width="30"
                                         Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected, Mode=OneWay}"/>
+                                <DataGridTemplateColumn Header="Contadores" >
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button BorderBrush="Transparent" Background="Transparent" Cursor="Hand" >
+                                                <Button.Content>
+                                                    <Hyperlink Click="OnClickOpenCountersDetail" FontSize="15" Foreground="{StaticResource AccentBaseColorBrush}">Detalhes...</Hyperlink>
+                                                </Button.Content>
+                                            </Button>
+
+                                            
+
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+
                                 <DataGridTextColumn Header="Fabricante" Binding="{Binding Brand.BrandName}"/>
                                 <DataGridTextColumn Header="Impressora" Binding="{Binding ModelName}"/>
+                                <DataGridTextColumn Header="S.Number" Binding="{Binding SerialNumber}" IsReadOnly="True" />
                                 <DataGridTemplateColumn Header="Quantidade">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
@@ -191,6 +229,20 @@
                                                 <CheckBox IsEnabled="False" IsChecked="{Binding IsColor, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsColor" Margin="5,0,0,0"/>
                                                 <CheckBox IsEnabled="False" IsChecked="{Binding IsDuplex, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsDuplex" Margin="5,0,0,0"/>
                                                 <CheckBox IsEnabled="False" IsChecked="{Binding IsScan, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsScan" Margin="5,0,0,0"/>
+                                                <CheckBox  IsChecked="{Binding IsLargeMedia, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Content="IsLargeMedia" Margin="5,0,0,0"/>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                                <DataGridTemplateColumn Header="AddressName/Port/Mac">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                                                <TextBlock Text="{Binding AddressName}"/>
+                                                <TextBlock Text=" / "/>
+                                                <TextBlock Text="{Binding AddressPort}"/>
+                                                <TextBlock Text=" / "/>
+                                                <TextBlock Text="{Binding AddressMac}"/>
                                             </StackPanel>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>

@@ -5,7 +5,7 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         Title="Impressora" WindowStartupLocation="CenterScreen"
                        BorderBrush="{DynamicResource AccentColorBrush}"
-                      BorderThickness="1" x:Name="Control" Height="540" Width="800">
+                      BorderThickness="1" x:Name="Control" Height="600" Width="800">
     <Grid Margin="10,10,10,0">
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -22,10 +22,32 @@
                         <TextBox Margin="0,5,0,0" MaxLength="255" Text="{Binding OBPrinterModel.ModelName, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="TbModelName"/>
                         <TextBlock Text="Nome MPS:" Margin="0,5,0,0"/>
                         <TextBox Margin="0,5,0,0" MaxLength="255" Text="{Binding OBPrinterModel.NameXML, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Name="TbNameXML"/>
+                        <Grid>
+                              <Grid.ColumnDefinitions>
+                                  <ColumnDefinition/>
+                                  <ColumnDefinition/>
+                                  <ColumnDefinition/>
+                              </Grid.ColumnDefinitions>
+                            <StackPanel>
+                                <TextBlock Text="AddressName:" Margin="0,5,0,0"/>
+                                <TextBox Margin="0,5,0,0" MaxLength="20"  Text="{Binding OBPrinterModel.AddressName, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Margin="10,0,0,0" Grid.Column="1">
+                                <TextBlock Text="AddressPort:" Margin="0,5,0,0"/>
+                                <TextBox Margin="0,5,0,0"  MaxLength="20" Text="{Binding OBPrinterModel.AddressPort, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+                            <StackPanel Margin="10,0,0,0" Grid.Column="2">
+                                <TextBlock Text="AddressMac:" Margin="0,5,0,0"/>
+                                <TextBox Margin="0,5,0,0"  MaxLength="25" Text="{Binding OBPrinterModel.AddressMac, ElementName=Control,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" />
+                            </StackPanel>
+
+                        </Grid>
+                        
+
                         <StackPanel Margin="0,5,0,0" Orientation="Horizontal">
                             <StackPanel>
                                 <TextBlock Text="Rede/USB:" Margin="0,5,0,0"/>
-                                <controls:ToggleSwitch OnLabel="Rede" OffLabel="USB" IsChecked="{Binding OBPrinterModel.IsNetwork, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"   />
+                                <controls:ToggleSwitch OnLabel="Rede" OffLabel="USB" IsChecked="{Binding OBPrinterModel.IsNetwork, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, ElementName=Control}"   />
                             </StackPanel>
                             <StackPanel Margin="30,17,0,0" VerticalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
@@ -35,6 +57,10 @@
                                     <CheckBox  IsChecked="{Binding OBPrinterModel.IsScan, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ElementName=Control}" Content="IsScan" Margin="5,0,0,0"/>
                                     <CheckBox  IsChecked="{Binding OBPrinterModel.IsLargeMedia, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged,ElementName=Control}" Content="IsScan" Margin="5,0,0,0"/>
                                 </StackPanel>
+                            </StackPanel>
+                            <StackPanel Margin="20,0,0,0">
+                                <TextBlock Text="SerialNumber" Margin="0,5,0,0"/>
+                                <TextBox  Text="{Binding OBPrinterModel.SerialNumber, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged, ElementName=Control}"  MaxLength="50" Width="250" Margin="0,5,0,0"/>
                             </StackPanel>
                         </StackPanel>
                         <TextBlock Text="Localização:" Margin="0,5,0,0"/>

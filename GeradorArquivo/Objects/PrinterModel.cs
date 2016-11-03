@@ -1,4 +1,6 @@
-﻿namespace GeradorArquivo.Objects
+﻿using System.Collections.Generic;
+
+namespace GeradorArquivo.Objects
 {
     public class PrinterModel
     {
@@ -60,6 +62,42 @@
         }
 
 
+        private string _serialNumber = string.Empty;
+        public string SerialNumber
+        {
+            get { return _serialNumber; }
+            set { _serialNumber = value; }
+        }
+
+
+        private string _addressMac = string.Empty;
+        public string AddressMac
+        {
+            get { return _addressMac; }
+            set { _addressMac = value; }
+        }
+
+        private string _addressName = string.Empty;
+        public string AddressName
+        {
+            get { return _addressName; }
+            set { _addressName = value; }
+        }
+
+        private string _addressPort = string.Empty;
+        public string AddressPort
+        {
+            get { return _addressPort; }
+            set { _addressPort = value; }
+        }
+
+
+        private int _counterInitial = 5000;
+        public int CounterInitial
+        {
+            get { return _counterInitial; }
+            set { _counterInitial = value; }
+        }
 
         /// <summary>
         /// Utilizado para definir quantas impressoras serão gerados
@@ -71,6 +109,12 @@
             set { _qtPrinters = value; }
         }
 
+        private List<PrinterSupplyModelCounter> _listCounters = new List<PrinterSupplyModelCounter>();
+        public List<PrinterSupplyModelCounter> ListCounters
+        {
+            get { return _listCounters; }
+            set { _listCounters = value; }
+        }
         public object Clone()
         {
             return this.MemberwiseClone();

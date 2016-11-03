@@ -17,7 +17,7 @@ namespace GeradorArquivo.Windows
     /// <summary>
     /// Interaction logic for CWPrinterModel.xaml
     /// </summary>
-    public partial class CWPrinterModel : INotifyPropertyChanged
+    public partial class CWPrinterModel 
     {
         #region PROPRIEDADES
 

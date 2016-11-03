@@ -1,5 +1,8 @@
-﻿namespace GeradorArquivo.Objects
+﻿using System;
+
+namespace GeradorArquivo.Objects
 {
+    [Serializable]
     public class BehaviorSupply
     {
         public int BehaviorSupplyID { get; set; }

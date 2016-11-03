@@ -24,6 +24,9 @@ namespace GeradorArquivo.ObjectsDB
             parametros.Add(new SqlParameter("IsNetwork", objeto.IsNetwork));
             parametros.Add(new SqlParameter("IsScan", objeto.IsScan));
             parametros.Add(new SqlParameter("Location", objeto.Location));
+            parametros.Add(new SqlParameter("AddressMac", objeto.AddressMac));
+            parametros.Add(new SqlParameter("AddressName", objeto.AddressName));
+            parametros.Add(new SqlParameter("AddressPort", objeto.AddressPort));
             var printerModelID = executarDb.ExecuteCommandScalar("proc_PrinterModels_Insert", completed.Invoke, parametros.ToArray());
             InserirPrinterSupply(printerModelID, suppliesNews, () =>
             {
@@ -153,7 +156,7 @@ namespace GeradorArquivo.ObjectsDB
                 completed.Invoke();
         }
 
-        public List<PrinterModel> BuscaTodos()
+        public List<PrinterModel> BuscaTodos(bool loadCounters = false)
         {
             var list = new List<PrinterModel>();
             var executarDb = new ExecDB();
@@ -165,22 +168,32 @@ namespace GeradorArquivo.ObjectsDB
                     while (reader.Read())
                     {
                         index++;
-                        list.Add(new PrinterModel()
-                        {
-                            PrinteModelID = reader["PrinterModelID"].ToIntReader(),
-                            ModelName = reader["ModelName"].ToStringReader(),
-                            Brand = new Brand() { BrandID = reader.GetInt32(2), BrandName = reader.GetString(3) },
-                            NameXML = reader["NameXML"].ToStringReader(),
-                            Observation =reader["Observation"].ToStringReader(),
-                            IsColor = reader["IsColor"].ToBoolReader(),
-                            IsDuplex = reader["IsDuplex"].ToBoolReader(),
-                            IsCopier = reader["IsCopier"].ToBoolReader(),
-                            IsLargeMedia = reader["IsLargeMedia"].ToBoolReader(),
-                            IsNetwork = reader["IsNetwork"].ToBoolReader(),
-                            IsScan = reader["IsScan"].ToBoolReader(),
-                            Location = reader["Location"].ToStringReader(),
-                            Index = index
-                        });
+
+
+                        var printerModel = new PrinterModel();
+
+                        printerModel.PrinteModelID = reader["PrinterModelID"].ToIntReader();
+                        printerModel.ModelName = reader["ModelName"].ToStringReader();
+                        printerModel.Brand = new Brand() { BrandID = reader.GetInt32(2), BrandName = reader.GetString(3) };
+                        printerModel.NameXML = reader["NameXML"].ToStringReader();
+                        printerModel.Observation = reader["Observation"].ToStringReader();
+                        printerModel.IsColor = reader["IsColor"].ToBoolReader();
+                        printerModel.IsDuplex = reader["IsDuplex"].ToBoolReader();
+                        printerModel.IsCopier = reader["IsCopier"].ToBoolReader();
+                        printerModel.IsLargeMedia = reader["IsLargeMedia"].ToBoolReader();
+                        printerModel.IsNetwork = reader["IsNetwork"].ToBoolReader();
+                        printerModel.IsScan = reader["IsScan"].ToBoolReader();
+                        printerModel.Location = reader["Location"].ToStringReader();
+                        printerModel.SerialNumber = reader["SerialNumber"].ToStringReader();
+                        printerModel.AddressMac = reader["AddressMac"].ToStringReader();
+                        printerModel.AddressName = reader["AddressName"].ToStringReader();
+                        printerModel.AddressPort = reader["AddressPort"].ToStringReader();
+                        printerModel.Index = index;
+                        if (loadCounters)
+                          printerModel.ListCounters.AddRange(BuscaTodosContadores(printerModel.PrinteModelID));
+                        list.Add(printerModel);
+                        
+
                     }
                 }
             });
@@ -189,7 +202,7 @@ namespace GeradorArquivo.ObjectsDB
         }
 
         public void Editar(PrinterModel objeto, List<PrinterSupplyModelCounter> suppliesNews, List<int> idsSuppliesRemove, List<PrinterSupplyModelCounter> counters, List<int> idsCountersRemove,
-            List<PrinterSupplyModelCounter> countersChange,Action completed)
+            List<PrinterSupplyModelCounter> countersChange, Action completed)
         {
             var executarDb = new ExecDB();
             var parametros = new List<SqlParameter>();
@@ -205,6 +218,10 @@ namespace GeradorArquivo.ObjectsDB
             parametros.Add(new SqlParameter("IsNetwork", objeto.IsNetwork));
             parametros.Add(new SqlParameter("IsScan", objeto.IsScan));
             parametros.Add(new SqlParameter("Location", objeto.Location));
+            parametros.Add(new SqlParameter("AddressMac", objeto.AddressMac));
+            parametros.Add(new SqlParameter("AddressName", objeto.AddressName));
+            parametros.Add(new SqlParameter("AddressPort", objeto.AddressPort));
+            parametros.Add(new SqlParameter("SerialNumber", objeto.SerialNumber));
             executarDb.ExecuteCommandScalar("proc_PrinterModels_Update", completed.Invoke, parametros.ToArray());
             InserirPrinterSupply(objeto.PrinteModelID, suppliesNews, () =>
             {
@@ -214,7 +231,7 @@ namespace GeradorArquivo.ObjectsDB
                     {
                         RemoverCounter(objeto.PrinteModelID, idsCountersRemove, () =>
                         {
-                            UpdateCounter(objeto.PrinteModelID, countersChange,completed.Invoke);
+                            UpdateCounter(objeto.PrinteModelID, countersChange, completed.Invoke);
                         });
                     });
                 });

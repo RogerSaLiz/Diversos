@@ -78,7 +78,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Calc\CalcCountersType.cs" />
+    <Compile Include="Controls\CheckboxDataGrid.cs" />
+    <Compile Include="Converters\ConvertNumeric.cs" />
     <Compile Include="DB\ExecDB.cs" />
+    <Compile Include="Helper\Extensions.cs" />
     <Compile Include="Helper\HelperExt.cs" />
     <Compile Include="ObjectsDB\BehaviorSupplyDB.cs" />
     <Compile Include="ObjectsDB\BrandDB.cs" />
@@ -99,7 +103,7 @@
     <Compile Include="Objects\Enterprise.cs" />
     <Compile Include="Objects\OperationSystem.cs" />
     <Compile Include="Objects\PrinterModel.cs" />
-    <Compile Include="Objects\PrinterSupplyModel.cs" />
+    <Compile Include="Objects\PrinterSupplyModelCounter.cs" />
     <Compile Include="Objects\Product.cs" />
     <Compile Include="Objects\SupplyColors.cs" />
     <Compile Include="Objects\SupplyFunctions.cs" />
@@ -121,6 +125,9 @@
     </Compile>
     <Compile Include="Windows\CWCounter.xaml.cs">
       <DependentUpon>CWCounter.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\CWDetailCountersPrinters.xaml.cs">
+      <DependentUpon>CWDetailCountersPrinters.xaml</DependentUpon>
     </Compile>
     <Compile Include="Windows\CWEnterprise.xaml.cs">
       <DependentUpon>CWEnterprise.xaml</DependentUpon>
@@ -200,6 +207,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Windows\CWCounter.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\CWDetailCountersPrinters.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
